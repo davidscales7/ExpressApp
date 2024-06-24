@@ -1,7 +1,5 @@
-// routes/index.js
 const express = require('express');
 const User = require('../models/user');
-
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
@@ -58,6 +56,20 @@ router.post('/finance', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+router.get('/finances/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId).populate('finances');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user.finances);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 

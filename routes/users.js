@@ -1,9 +1,19 @@
-var express = require('express');
-var router = express.Router();
+const mongoose = require('mongoose');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+const financeSchema = new mongoose.Schema({
+    selectedValue: { type: String, required: true },
+    description: { type: String, required: true },
+    amount: { type: Number, required: true }
 });
 
-module.exports = router;
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    finances: [financeSchema]
+});
+
+// Check if the model already exists
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+module.exports = User;
